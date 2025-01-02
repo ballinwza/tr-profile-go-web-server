@@ -39,12 +39,17 @@ func StartGin() {
 	router.GET("/room/:roomid", roomGET)
 	router.POST("/room-post/:roomid", roomPOST)
 	router.GET("/stream/:roomid", streamRoom)
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 	if err := router.Run(":" + port); err != nil {
-        log.Panicf("error: %s", err)
+		log.Panicf("error: %s", err)
 	}
 }
