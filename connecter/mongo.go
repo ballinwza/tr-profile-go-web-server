@@ -10,9 +10,19 @@ import (
 )
 
 func ConnectWithMongo(databaseName, collectionName string) *mongo.Collection {
-	err := godotenv.Load(".env.prod")
+	env := os.Getenv("GO_ENV")
+
+	var envFile string
+	if env == "prod" {
+		envFile = ".env.prod"
+	} else {
+		envFile = ".env"
+	}
+
+	// โหลดไฟล์ .env ตามสภาพแวดล้อม
+	err := godotenv.Load(envFile)
 	if err != nil {
-		log.Fatalf("Error loading .env file : %v", err)
+		log.Fatalf("Error loading %v file : %v", envFile, err)
 	}
 
 	mongoUsername := os.Getenv("MONGO_USERNAME")
@@ -27,6 +37,7 @@ func ConnectWithMongo(databaseName, collectionName string) *mongo.Collection {
 	}
 
 	collection := client.Database(databaseName).Collection(collectionName)
+	log.Printf("Running in %s environment", env)
 
 	return collection
 }
