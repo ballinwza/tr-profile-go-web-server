@@ -13,13 +13,12 @@ func ConnectWithMongo(databaseName, collectionName string) *mongo.Collection {
 	env := os.Getenv("GO_ENV")
 
 	var envFile string
-	if env == "prod" {
-		envFile = ".env.prod"
-	} else {
+	if env == "development" {
 		envFile = ".env"
+	} else {
+		envFile = ".env.prod"
 	}
 
-	// โหลดไฟล์ .env ตามสภาพแวดล้อม
 	err := godotenv.Load(envFile)
 	if err != nil {
 		log.Fatalf("Error loading %v file : %v", envFile, err)
