@@ -5,12 +5,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	struct_movie "github.com/render-examples/go-gin-web-server/struct"
+	"github.com/render-examples/go-gin-web-server/handler"
+	struct_movie "github.com/render-examples/go-gin-web-server/struct/movie"
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 func (m *MovieService) GetAllMovieHandler(c *gin.Context) {
-	var result []struct_movie.Movie
+	var result []struct_movie.MovieRes
 	filter := bson.M{}
 	cursor, err := m.collection.Find(context.TODO(), filter)
 	if err != nil {
@@ -29,8 +30,6 @@ func (m *MovieService) GetAllMovieHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": result,
-	})
+	c.JSON(handler.SuccessAndResponseJson(result))
 
 }

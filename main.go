@@ -43,6 +43,7 @@ func StartGin() {
 	// router.GET("/stream/:roomid", streamRoom)
 	router.GET("/movies", handler_movie.SetupMovieService().GetAllMovieHandler)
 	router.GET("/movies/:id", handler_movie.SetupMovieService().GetMovieByIdHandler)
+	router.POST("/create/movie", handler_movie.SetupMovieService().CreateMovieHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
