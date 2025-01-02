@@ -10,7 +10,7 @@ import (
 )
 
 func ConnectWithMongo(databaseName, collectionName string) *mongo.Collection {
-	err := godotenv.Load(".env")
+	err := godotenv.Load(".env.prod")
 	if err != nil {
 		log.Fatalf("Error loading .env file : %v", err)
 	}
