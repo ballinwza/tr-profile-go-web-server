@@ -7,7 +7,7 @@ import (
 	"runtime"
 
 	"github.com/gin-gonic/gin"
-	handler_movie "github.com/render-examples/go-gin-web-server/handler/movie"
+	handler_lotto "github.com/render-examples/go-gin-web-server/handler/lotto"
 )
 
 func main() {
@@ -37,13 +37,16 @@ func StartGin() {
 	router.LoadHTMLGlob("resources/*.templ.html")
 	router.Static("/static", "resources/static")
 
+	router.GET("/lotto", handler_lotto.LottoTest)
+
 	// router.GET("/", index)
 	// router.GET("/room/:roomid", roomGET)
 	// router.POST("/room-post/:roomid", roomPOST)
 	// router.GET("/stream/:roomid", streamRoom)
-	router.GET("/movies", handler_movie.SetupMovieService().GetAllMovieHandler)
-	router.GET("/movies/:id", handler_movie.SetupMovieService().GetMovieByIdHandler)
-	router.POST("/create/movie", handler_movie.SetupMovieService().CreateMovieHandler)
+
+	// router.GET("/movies", handler_movie.SetupMovieService().GetAllMovieHandler)
+	// router.GET("/movies/:id", handler_movie.SetupMovieService().GetMovieByIdHandler)
+	// router.POST("/create/movie", handler_movie.SetupMovieService().CreateMovieHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
