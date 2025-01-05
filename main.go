@@ -37,7 +37,7 @@ func StartGin() {
 	router.LoadHTMLGlob("resources/*.templ.html")
 	router.Static("/static", "resources/static")
 
-	router.GET("/lotto", handler_lotto.LottoTest)
+	handler_lotto.SetupLottoService().AllLottoServiceHandler(router)
 
 	// router.GET("/", index)
 	// router.GET("/room/:roomid", roomGET)
