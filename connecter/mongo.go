@@ -13,7 +13,7 @@ func ConnectWithMongo(databaseName, collectionName string) *mongo.Collection {
 	env := os.Getenv("GO_ENV")
 
 	var envFile string
-	if env == "development" || env == "" {
+	if env == "development" {
 		envFile = ".env"
 	} else {
 		envFile = ".env.prod"
