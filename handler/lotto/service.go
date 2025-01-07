@@ -8,7 +8,7 @@ import (
 
 type ILottoService interface {
 	AllLottoServiceHandler(*gin.Engine)
-	GetAllLottoHandler(*gin.Context)
+	GetAllLottoWithFilterHandler(*gin.Context)
 	GetLottoByIdHandler(c *gin.Context)
 	LottoScrapperHandler(*gin.Context)
 }
@@ -25,6 +25,6 @@ func SetupLottoService() ILottoService {
 
 func (m *LottoService) AllLottoServiceHandler(router *gin.Engine) {
 	router.GET("/lotto", m.LottoScrapperHandler)
-	router.GET("/lotto/list", m.GetAllLottoHandler)
+	router.GET("/lotto/list", m.GetAllLottoWithFilterHandler)
 	router.GET("/lotto/:id", m.GetLottoByIdHandler)
 }

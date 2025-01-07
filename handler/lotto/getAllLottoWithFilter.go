@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
-func (m *LottoService) GetAllLottoHandler(c *gin.Context) {
+func (m *LottoService) GetAllLottoWithFilterHandler(c *gin.Context) {
 	var lotties []struct_lotto.Lotto
 	var req struct_lotto.LottoFilterReq
 	err := c.ShouldBind(&req)
@@ -20,15 +20,15 @@ func (m *LottoService) GetAllLottoHandler(c *gin.Context) {
 	if req.First != nil {
 		filter["first_prize"] = req.First
 	}
-	// if req.BackThreeDigit != nil {
-	// 	filter["back_three_digit_prize"] = req.BackThreeDigit
-	// }
+	if req.BackThreeDigit != nil {
+		filter["back_three_digit_prize"] = bson.M{"$in": req.BackThreeDigit}
+	}
 	if req.BackTwoDigit != nil {
 		filter["back_two_digit_prize"] = req.BackTwoDigit
 	}
-	// if req.FrontThreeDigit != nil {
-	// 	filter["front_three_digit_prize"] = req.FrontThreeDigit
-	// }
+	if req.FrontThreeDigit != nil {
+		filter["front_three_digit_prize"] = bson.M{"$in": req.FrontThreeDigit}
+	}
 	if req.Year != nil {
 		yearFromDate, err := strconv.Atoi(*req.Year)
 		if err != nil {
@@ -50,7 +50,7 @@ func (m *LottoService) GetAllLottoHandler(c *gin.Context) {
 
 	pipeline := mongo.Pipeline{
 		{{Key: "$match", Value: filter}},
-		{{Key: "$sort", Value: bson.M{"date": -1}}},
+		{{Key: "$sort", Value: bson.M{"date": -1}}}, // DESC
 	}
 
 	cursor, err := m.collection.Aggregate(context.TODO(), pipeline)
