@@ -1,4 +1,4 @@
-package handler_lotto
+package services_lotto
 
 import (
 	"context"
@@ -9,13 +9,14 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gin-gonic/gin"
 	"github.com/gocolly/colly/v2"
-	struct_lotto "github.com/render-examples/go-gin-web-server/struct/lotto"
+	models_lotto "github.com/render-examples/go-gin-web-server/models/lotto"
+
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
-func (m *LottoService) LottoScrapperHandler(c *gin.Context) {
+func (m *LottoService) LottoScrapperByPage(c *gin.Context) {
 	var visitUrl string
 	pageParam := c.DefaultQuery("page", "")
 	if pageParam == "" || pageParam == "1" {
@@ -25,7 +26,7 @@ func (m *LottoService) LottoScrapperHandler(c *gin.Context) {
 	}
 
 	collyCollec := colly.NewCollector()
-	var lotties []struct_lotto.Lotto
+	var lotties []models_lotto.Lotto
 
 	collyCollec.OnResponse(func(r *colly.Response) {
 
@@ -70,7 +71,7 @@ func (m *LottoService) LottoScrapperHandler(c *gin.Context) {
 
 			backTwoDigitPrize := s.Find(".archive--lotto__result-list > li:nth-child(4) .archive--lotto__result-number").Text()
 
-			lotties = append(lotties, struct_lotto.Lotto{
+			lotties = append(lotties, models_lotto.Lotto{
 				Date:                 parseDate,
 				FirstPrize:           firstPrize,
 				FrontThreeDigitPrize: fontThreedigitPrize,

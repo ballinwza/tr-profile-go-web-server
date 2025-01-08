@@ -1,7 +1,6 @@
-package struct_movie
+package models_movie
 
-type MovieRes struct {
-	Uuid        string  `json:"id" bson:"id"`
+type CreateMovieReq struct {
 	Title       string  `json:"title" bson:"title"`
 	Description string  `json:"description" bson:"description"`
 	Adult       bool    `json:"adult" bson:"adult"`

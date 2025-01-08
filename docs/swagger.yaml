@@ -1,0 +1,237 @@
+consumes:
+- application/json
+definitions:
+  handler.ErrorResponseModel:
+    properties:
+      error:
+        example: Error Message
+        type: string
+    type: object
+  models_lotto.Lotto:
+    properties:
+      back_three_digit_prize:
+        example:
+        - '[''376'''
+        - ' ''297'']'
+        items:
+          type: string
+        type: array
+      back_two_digit_prize:
+        example: "51"
+        type: string
+      date:
+        example: "2025-01-01T00:00:00Z"
+        type: string
+      first_prize:
+        example: "730209"
+        type: string
+      front_three_digit_prize:
+        example:
+        - '[''446'''
+        - ' ''065'']'
+        items:
+          type: string
+        type: array
+    type: object
+  models_movie.MovieRes:
+    properties:
+      adult:
+        type: boolean
+      description:
+        type: string
+      genres:
+        items:
+          type: integer
+        type: array
+      id:
+        type: string
+      rating:
+        type: number
+      title:
+        type: string
+    type: object
+  services_lotto.responseLotto:
+    properties:
+      data:
+        $ref: '#/definitions/models_lotto.Lotto'
+    type: object
+  services_lotto.responseLottoList:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models_lotto.Lotto'
+        type: array
+    type: object
+  services_movie.responseMovie:
+    properties:
+      data:
+        $ref: '#/definitions/models_movie.MovieRes'
+    type: object
+  services_movie.responseMovieList:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models_movie.MovieRes'
+        type: array
+    type: object
+host: tr-profile-go-web-server.onrender.com
+info:
+  contact: {}
+  description: This is a API Swagger documentation included movie and lotto API.
+  termsOfService: The Terms of Service for the API http://swagger.io/terms/.
+  title: Tradon Profile API By GO
+  version: "1.0"
+paths:
+  /lotto/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get string by id then return lotto
+      parameters:
+      - description: 'Exmaple : 677accbf56ff1bc2a731b944'
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services_lotto.responseLotto'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+      summary: Show an lotto
+      tags:
+      - lotties
+  /lotto/list:
+    get:
+      consumes:
+      - application/json
+      description: get lotto list by LottoFilterReq model then return lotto list as
+        json
+      parameters:
+      - default: "2025"
+        description: year as string number
+        in: query
+        name: year
+        type: string
+      - default: "200"
+        description: 3 digit of string number
+        in: query
+        name: b3d
+        type: string
+      - default: "20"
+        description: 2 digit of string number
+        in: query
+        name: b2d
+        type: string
+      - default: "200"
+        description: 3 digit of string number
+        in: query
+        name: f3d
+        type: string
+      - default: "730209"
+        description: 6 digit of string number
+        in: query
+        name: first
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services_lotto.responseLottoList'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+      summary: Response lotto list by filter
+      tags:
+      - lotties
+  /movie/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get movie by id param then return movie detail as json
+      parameters:
+      - default: "2025"
+        description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services_movie.responseMovie'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+      summary: Response movie by id
+      tags:
+      - movies
+  /movie/list:
+    get:
+      consumes:
+      - application/json
+      description: get movie list by filter model then return movie list as json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services_movie.responseMovieList'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+      summary: Response movie list by filter
+      tags:
+      - movies
+produces:
+- application/json
+schemes:
+- https
+swagger: "2.0"
