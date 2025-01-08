@@ -3,11 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"runtime"
 
 	"github.com/gin-gonic/gin"
-	handler_lotto "github.com/render-examples/go-gin-web-server/handler/lotto"
+	controllers "github.com/render-examples/go-gin-web-server/controllers"
+	_ "github.com/render-examples/go-gin-web-server/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
@@ -28,26 +32,26 @@ func StartWorkers() {
 	go statsWorker()
 }
 
-// StartGin starts gin web server with setting router.
+// @title My API
+// @version 1.0
+// @description This is a sample server for demonstrating Swagger documentation.
+// @host localhost:8080
+
 func StartGin() {
 	gin.SetMode(gin.ReleaseMode)
 
 	router := gin.New()
-	router.Use(rateLimit, gin.Recovery())
 	router.LoadHTMLGlob("resources/*.templ.html")
 	router.Static("/static", "resources/static")
 
-	handler_lotto.SetupLottoService().AllLottoServiceHandler(router)
-
-	// router.GET("/", index)
-	// router.GET("/room/:roomid", roomGET)
-	// router.POST("/room-post/:roomid", roomPOST)
-	// router.GET("/stream/:roomid", streamRoom)
+	controllers.SetupController().AllRoute(router)
+	router.GET("/", index)
 
 	// router.GET("/movies", handler_movie.SetupMovieService().GetAllMovieHandler)
 	// router.GET("/movies/:id", handler_movie.SetupMovieService().GetMovieByIdHandler)
 	// router.POST("/create/movie", handler_movie.SetupMovieService().CreateMovieHandler)
 
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -55,4 +59,8 @@ func StartGin() {
 	if err := router.Run(":" + port); err != nil {
 		log.Panicf("error: %s", err)
 	}
+}
+
+func index(c *gin.Context) {
+	c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
 }

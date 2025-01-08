@@ -1,0 +1,53 @@
+definitions:
+  services_lotto.Err:
+    properties:
+      err: {}
+      meta: {}
+      type:
+        type: integer
+    type: object
+  services_lotto.Test:
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample server for demonstrating Swagger documentation.
+  title: My API
+  version: "1.0"
+paths:
+  /lotto/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get string by id then return lotto
+      parameters:
+      - description: 'Exmaple : 677accbf56ff1bc2a731b944'
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services_lotto.Test'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/services_lotto.Err'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: {}
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: {}
+            type: object
+      summary: Show an lotto
+      tags:
+      - lotties
+swagger: "2.0"

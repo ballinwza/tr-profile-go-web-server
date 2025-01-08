@@ -1,4 +1,4 @@
-package handler_lotto
+package services_lotto
 
 import (
 	"context"
