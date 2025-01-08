@@ -1,4 +1,4 @@
-package struct_lotto
+package models_lotto
 
 type LottoFilterReq struct {
 	Year            *string   `form:"year"`
