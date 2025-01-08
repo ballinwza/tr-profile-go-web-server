@@ -44,12 +44,8 @@ func StartGin() {
 	router.LoadHTMLGlob("resources/*.templ.html")
 	router.Static("/static", "resources/static")
 
-	controllers.SetupController().AllRoute(router)
 	router.GET("/", index)
-
-	// router.GET("/movies", handler_movie.SetupMovieService().GetAllMovieHandler)
-	// router.GET("/movies/:id", handler_movie.SetupMovieService().GetMovieByIdHandler)
-	// router.POST("/create/movie", handler_movie.SetupMovieService().CreateMovieHandler)
+	controllers.SetupController().AllRoute(router)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	port := os.Getenv("PORT")

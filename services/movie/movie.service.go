@@ -6,7 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
-type ILottoService interface {
+type IMovieService interface {
 	CreateMovieHandler(*gin.Context)
 	GetAllMovieHandler(c *gin.Context)
 	GetMovieByIdHandler(*gin.Context)
