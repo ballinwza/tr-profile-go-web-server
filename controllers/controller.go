@@ -8,6 +8,8 @@ import (
 
 type IController interface {
 	AllRoute(*gin.Engine)
+	LottoRoute(*gin.Engine)
+	MovieRoute(*gin.Engine)
 }
 type Controller struct {
 	services_lotto.ILottoService
@@ -22,11 +24,6 @@ func SetupController() IController {
 }
 
 func (m *Controller) AllRoute(router *gin.Engine) {
-	router.GET("/lotto", m.GetLottoByIdHandler)
-	router.GET("/lotto/list", m.GetAllLottoWithFilterHandler)
-	router.GET("/lotto/:id", m.GetLottoByIdHandler)
-
-	router.GET("/movies", m.GetAllMovieHandler)
-	router.GET("/movies/:id", m.GetMovieByIdHandler)
-	router.POST("/create/movie", m.CreateMovieHandler)
+	m.LottoRoute(router)
+	m.MovieRoute(router)
 }
