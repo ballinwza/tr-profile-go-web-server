@@ -8,7 +8,6 @@ require (
 	github.com/PuerkitoBio/goquery v1.10.1
 	github.com/gin-gonic/gin v1.9.1
 	github.com/gocolly/colly/v2 v2.1.0
-	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/manucorporat/stats v0.0.0-20180402194714-3ba42d56d227
 	github.com/swaggo/files v1.0.1

@@ -5,16 +5,101 @@ import "github.com/swaggo/swag"
 
 const docTemplate = `{
     "schemes": {{ marshal .Schemes }},
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
     "swagger": "2.0",
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
+        "termsOfService": "The Terms of Service for the API http://swagger.io/terms/.",
         "contact": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/lotto/list": {
+            "get": {
+                "description": "get lotto list by LottoFilterReq model then return lotto list as json",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lotties"
+                ],
+                "summary": "Response lotto list by filter",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "2025",
+                        "description": "year as string number",
+                        "name": "year",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "200",
+                        "description": "3 digit of string number",
+                        "name": "b3d",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "20",
+                        "description": "2 digit of string number",
+                        "name": "b2d",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "200",
+                        "description": "3 digit of string number",
+                        "name": "f3d",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "730209",
+                        "description": "6 digit of string number",
+                        "name": "first",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services_lotto.responseLottoList"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponseModel"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponseModel"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponseModel"
+                        }
+                    }
+                }
+            }
+        },
         "/lotto/{id}": {
             "get": {
                 "description": "get string by id then return lotto",
@@ -41,27 +126,117 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/services_lotto.Test"
+                            "$ref": "#/definitions/services_lotto.responseLotto"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/services_lotto.Err"
+                            "$ref": "#/definitions/handler.ErrorResponseModel"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {}
+                            "$ref": "#/definitions/handler.ErrorResponseModel"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {}
+                            "$ref": "#/definitions/handler.ErrorResponseModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/movie/list": {
+            "get": {
+                "description": "get movie list by filter model then return movie list as json",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movies"
+                ],
+                "summary": "Response movie list by filter",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services_movie.responseMovieList"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponseModel"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponseModel"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponseModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/movie/{id}": {
+            "get": {
+                "description": "get movie by id param then return movie detail as json",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movies"
+                ],
+                "summary": "Response movie by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "2025",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services_movie.responseMovie"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponseModel"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponseModel"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponseModel"
                         }
                     }
                 }
@@ -69,18 +244,115 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "services_lotto.Err": {
+        "handler.ErrorResponseModel": {
             "type": "object",
             "properties": {
-                "err": {},
-                "meta": {},
-                "type": {
-                    "type": "integer"
+                "error": {
+                    "type": "string",
+                    "example": "Error Message"
                 }
             }
         },
-        "services_lotto.Test": {
-            "type": "object"
+        "models_lotto.Lotto": {
+            "type": "object",
+            "properties": {
+                "back_three_digit_prize": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "['376'",
+                        " '297']"
+                    ]
+                },
+                "back_two_digit_prize": {
+                    "type": "string",
+                    "example": "51"
+                },
+                "date": {
+                    "type": "string",
+                    "example": "2025-01-01T00:00:00Z"
+                },
+                "first_prize": {
+                    "type": "string",
+                    "example": "730209"
+                },
+                "front_three_digit_prize": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "['446'",
+                        " '065']"
+                    ]
+                }
+            }
+        },
+        "models_movie.MovieRes": {
+            "type": "object",
+            "properties": {
+                "adult": {
+                    "type": "boolean"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "number"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "services_lotto.responseLotto": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/models_lotto.Lotto"
+                }
+            }
+        },
+        "services_lotto.responseLottoList": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models_lotto.Lotto"
+                    }
+                }
+            }
+        },
+        "services_movie.responseMovie": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/models_movie.MovieRes"
+                }
+            }
+        },
+        "services_movie.responseMovieList": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models_movie.MovieRes"
+                    }
+                }
+            }
         }
     }
 }`
@@ -88,11 +360,11 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "tr-profile-go-web-server.onrender.com",
 	BasePath:         "",
-	Schemes:          []string{},
-	Title:            "My API",
-	Description:      "This is a sample server for demonstrating Swagger documentation.",
+	Schemes:          []string{"https"},
+	Title:            "Tradon Profile API By GO",
+	Description:      "This is a API Swagger documentation included movie and lotto API.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

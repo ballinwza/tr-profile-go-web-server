@@ -7,9 +7,9 @@ import (
 )
 
 type ILottoService interface {
-	GetAllLottoWithFilterHandler(*gin.Context)
-	GetLottoByIdHandler(c *gin.Context)
-	LottoScrapperHandler(*gin.Context)
+	GetAllLottoWithFilter(*gin.Context)
+	GetLottoById(c *gin.Context)
+	LottoScrapperByPage(*gin.Context)
 }
 
 type LottoService struct {

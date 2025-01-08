@@ -7,9 +7,9 @@ import (
 )
 
 type IMovieService interface {
-	CreateMovieHandler(*gin.Context)
-	GetAllMovieHandler(c *gin.Context)
-	GetMovieByIdHandler(*gin.Context)
+	CreateMovie(*gin.Context)
+	GetAllMovie(c *gin.Context)
+	GetMovieById(*gin.Context)
 }
 
 type MovieService struct {
