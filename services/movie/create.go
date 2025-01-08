@@ -1,4 +1,4 @@
-package handler_movie
+package services_movie
 
 import (
 	"context"
