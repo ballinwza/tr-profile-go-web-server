@@ -7,6 +7,29 @@ definitions:
         example: Error Message
         type: string
     type: object
+  handler.SuccessResponseModel:
+    properties:
+      message:
+        example: Success Message
+        type: string
+    type: object
+  models_book.BookFilterResponse:
+    properties:
+      _id:
+        type: string
+      author:
+        type: string
+      borrowed_count:
+        type: integer
+      categories:
+        items:
+          type: string
+        type: array
+      is_borrow:
+        type: boolean
+      title:
+        type: string
+    type: object
   models_lotto.Lotto:
     properties:
       back_three_digit_prize:
@@ -50,6 +73,18 @@ definitions:
       title:
         type: string
     type: object
+  services_book.responseBook:
+    properties:
+      data:
+        $ref: '#/definitions/models_book.BookFilterResponse'
+    type: object
+  services_book.responseBookList:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models_book.BookFilterResponse'
+        type: array
+    type: object
   services_lotto.responseLotto:
     properties:
       data:
@@ -74,14 +109,216 @@ definitions:
           $ref: '#/definitions/models_movie.MovieRes'
         type: array
     type: object
-host: tr-profile-go-web-server.onrender.com
+host: localhost:8080
 info:
   contact: {}
-  description: This is a API Swagger documentation included movie and lotto API.
+  description: This is a API Swagger documentation included book, movie and lotto
+    API.
   termsOfService: The Terms of Service for the API http://swagger.io/terms/.
-  title: Tradon Profile API By GO
-  version: "1.0"
+  title: REST API using GO and Gin by TR
+  version: "1.1"
 paths:
+  /book/list:
+    get:
+      consumes:
+      - application/json
+      description: get book list from title, author or categoyies then return as json
+        message
+      parameters:
+      - default: The Witcher Blood of Elves
+        description: string of book title
+        in: query
+        name: title
+        type: string
+      - default: Andrzej Sapkowski
+        description: string of author
+        in: query
+        name: author
+        type: string
+      - collectionFormat: multi
+        description: integer of categories id between 1-4
+        in: query
+        items:
+          type: integer
+        name: categories
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services_book.responseBookList'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+      summary: get book list by filter
+      tags:
+      - books
+  /book/popular:
+    get:
+      consumes:
+      - application/json
+      description: find most popular book then return as json responseBook model
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services_book.responseBook'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+      summary: find most popular book
+      tags:
+      - books
+  /borrow/book/{id}:
+    put:
+      consumes:
+      - application/json
+      description: changing isBorrow status true is mean borrowed this route will
+        increase borrowed_count plus 1 then return json message
+      parameters:
+      - description: string id of book
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.SuccessResponseModel'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+      summary: changing isBorrow status
+      tags:
+      - books
+  /create/book/:
+    post:
+      consumes:
+      - application/json
+      description: create book by json body as models_book.BookRequest then return
+        as json message
+      parameters:
+      - default: Some book title
+        description: string of book title
+        in: query
+        name: title
+        required: true
+        type: string
+      - default: my self
+        description: string of book author
+        in: query
+        name: author
+        required: true
+        type: string
+      - collectionFormat: multi
+        description: category fill as number between 1-4
+        in: query
+        items:
+          type: integer
+        name: categories
+        required: true
+        type: array
+      - default: false
+        description: constant of borrow status true is mean borrowed
+        in: query
+        name: is_borrow
+        required: true
+        type: boolean
+      - default: 0
+        description: borrowed counter
+        in: query
+        name: borrowed_count
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.SuccessResponseModel'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+      summary: create book by json body
+      tags:
+      - books
+  /delete/book/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete book by id then return as message
+      parameters:
+      - description: string id of book
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.SuccessResponseModel'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+      summary: delete book by id
+      tags:
+      - books
   /lotto/{id}:
     get:
       consumes:
@@ -230,8 +467,74 @@ paths:
       summary: Response movie list by filter
       tags:
       - movies
+  /update/book/{id}:
+    put:
+      consumes:
+      - application/json
+      description: update book from param id from _id then return as json message
+      parameters:
+      - description: 'Example : 678139d4e150ae9affc077bf'
+        in: path
+        name: id
+        required: true
+        type: string
+      - default: Some book title
+        description: string of book title
+        in: query
+        name: title
+        required: true
+        type: string
+      - default: my self
+        description: string of book author
+        in: query
+        name: author
+        required: true
+        type: string
+      - collectionFormat: multi
+        description: category fill as number between 1-4
+        in: query
+        items:
+          type: integer
+        name: categories
+        required: true
+        type: array
+      - default: false
+        description: constant of borrow status true is mean borrowed
+        in: query
+        name: is_borrow
+        required: true
+        type: boolean
+      - default: 0
+        description: borrowed counter
+        in: query
+        name: borrowed_count
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.SuccessResponseModel'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponseModel'
+      summary: update book from param id
+      tags:
+      - books
 produces:
 - application/json
 schemes:
 - https
+- http
 swagger: "2.0"
