@@ -1,3 +1,4 @@
+basePath: /
 consumes:
 - application/json
 definitions:
@@ -109,7 +110,7 @@ definitions:
           $ref: '#/definitions/models_movie.MovieRes'
         type: array
     type: object
-host: localhost:8080
+host: tr-profile-go-web-server.onrender.com
 info:
   contact: {}
   description: This is a API Swagger documentation included book, movie and lotto
