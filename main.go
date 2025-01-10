@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"runtime"
 
@@ -35,6 +36,7 @@ func StartWorkers() {
 // @version 1.1
 // @description This is a API Swagger documentation included book, movie and lotto API.
 // @host tr-profile-go-web-server.onrender.com
+// @BasePath /
 // @accept json
 // @produce json
 // @schemes https http
@@ -48,7 +50,7 @@ func StartGin() {
 	// router.Static("/static", "resources/static")
 	// router.LoadHTMLGlob("/swagger/*.html")
 
-	// router.GET("/", index)
+	router.GET("/", index)
 	controllers.SetupController().AllRoute(router)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -61,6 +63,6 @@ func StartGin() {
 	}
 }
 
-// func index(c *gin.Context) {
-// 	c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
-// }
+func index(c *gin.Context) {
+	c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
+}

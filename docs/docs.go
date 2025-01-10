@@ -801,8 +801,8 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.1",
-	Host:             "localhost:8080",
-	BasePath:         "",
+	Host:             "tr-profile-go-web-server.onrender.com",
+	BasePath:         "/",
 	Schemes:          []string{"https", "http"},
 	Title:            "REST API using GO and Gin by TR",
 	Description:      "This is a API Swagger documentation included book, movie and lotto API.",
