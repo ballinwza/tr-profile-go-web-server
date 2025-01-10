@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"runtime"
 
@@ -32,25 +31,24 @@ func StartWorkers() {
 	go statsWorker()
 }
 
-// @title Tradon Profile API By GO
-// @version 1.0
-// @description This is a API Swagger documentation included movie and lotto API.
+// @title REST API using GO and Gin by TR
+// @version 1.1
+// @description This is a API Swagger documentation included book, movie and lotto API.
 // @host tr-profile-go-web-server.onrender.com
 // @accept json
 // @produce json
-// @schemes https
+// @schemes https http
 // @termsOfService The Terms of Service for the API http://swagger.io/terms/.
 
 func StartGin() {
 	gin.SetMode(gin.ReleaseMode)
 
 	router := gin.New()
-	router.LoadHTMLGlob("resources/*.templ.html")
-	router.Static("/static", "resources/static")
+	// router.LoadHTMLGlob("resources/*.templ.html")
+	// router.Static("/static", "resources/static")
+	// router.LoadHTMLGlob("/swagger/*.html")
 
-	router.GET("/", func(c *gin.Context) {
-		c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
-	})
+	// router.GET("/", index)
 	controllers.SetupController().AllRoute(router)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -62,3 +60,7 @@ func StartGin() {
 		log.Panicf("error: %s", err)
 	}
 }
+
+// func index(c *gin.Context) {
+// 	c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
+// }
