@@ -13,4 +13,7 @@ format:
 	gofmt -l .
 
 swag:
-	export PATH=$PATH:$HOME/go/bin & swag init
+	export PATH=$PATH:$HOME/go/bin
+
+swagi:
+	swag init
