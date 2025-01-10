@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/render-examples/go-gin-web-server/handler"
-	"github.com/render-examples/go-gin-web-server/models/models_movie"
+	models_movie "github.com/render-examples/go-gin-web-server/models/movie"
 )
 
 func (m *MovieService) CreateMovie(c *gin.Context) {
