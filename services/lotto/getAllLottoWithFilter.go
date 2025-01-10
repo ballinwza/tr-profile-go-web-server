@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/render-examples/go-gin-web-server/handler"
-	struct_lotto "github.com/render-examples/go-gin-web-server/models/lotto"
+	models_lotto "github.com/render-examples/go-gin-web-server/models/lotto"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
@@ -29,9 +29,15 @@ import (
 // @Failure      500  {object}  handler.ErrorResponseModel
 // @Router       /lotto/list [get]
 func (m *LottoService) GetAllLottoWithFilter(c *gin.Context) {
-	var lotties []struct_lotto.Lotto
-	var req struct_lotto.LottoFilterReq
+	var lotties []models_lotto.Lotto
+	var req models_lotto.LottoFilterReq
 	err := c.ShouldBind(&req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, handler.ErrorResponseModel{
+			Error: err.Error(),
+		})
+		return
+	}
 	filter := bson.M{}
 
 	if req.First != nil {
