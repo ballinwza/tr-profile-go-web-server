@@ -14,24 +14,6 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func main() {
-	ConfigRuntime()
-	StartWorkers()
-	StartGin()
-}
-
-// ConfigRuntime sets the number of operating system threads.
-func ConfigRuntime() {
-	nuCPU := runtime.NumCPU()
-	runtime.GOMAXPROCS(nuCPU)
-	fmt.Printf("Running with %d CPUs\n", nuCPU)
-}
-
-// StartWorkers start starsWorker by goroutine.
-func StartWorkers() {
-	go statsWorker()
-}
-
 // @title REST API using GO and Gin by TR
 // @version 1.1
 // @description This is a API Swagger documentation included book, movie and lotto API.
@@ -41,14 +23,29 @@ func StartWorkers() {
 // @produce json
 // @schemes https http
 // @termsOfService The Terms of Service for the API http://swagger.io/terms/.
+func main() {
+	ConfigRuntime()
+	StartWorkers()
+	StartGin()
+}
+
+func ConfigRuntime() {
+	nuCPU := runtime.NumCPU()
+	runtime.GOMAXPROCS(nuCPU)
+	fmt.Printf("Running with %d CPUs\n", nuCPU)
+}
+
+func StartWorkers() {
+	go statsWorker()
+}
+
+func index(c *gin.Context) {
+	c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
+}
 
 func StartGin() {
 	gin.SetMode(gin.ReleaseMode)
-
 	router := gin.New()
-	// router.LoadHTMLGlob("resources/*.templ.html")
-	// router.Static("/static", "resources/static")
-	// router.LoadHTMLGlob("/swagger/*.html")
 
 	router.GET("/", index)
 	controllers.SetupController().AllRoute(router)
@@ -61,8 +58,4 @@ func StartGin() {
 	if err := router.Run(":" + port); err != nil {
 		log.Panicf("error: %s", err)
 	}
-}
-
-func index(c *gin.Context) {
-	c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
 }
