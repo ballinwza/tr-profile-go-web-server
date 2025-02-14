@@ -6,7 +6,9 @@ import (
 	"net/http"
 	"os"
 	"runtime"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	controllers "github.com/render-examples/go-gin-web-server/controllers"
 	_ "github.com/render-examples/go-gin-web-server/docs"
@@ -48,6 +50,17 @@ func StartGin() {
 	router := gin.New()
 
 	router.GET("/", index)
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"https://tr-profile-go-web-server.onrender.com", "http://localhost:3010"},
+		AllowMethods:     []string{"PUT", "DELETE", "GET", "POST"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "https://github.com"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
 	controllers.SetupController().AllRoute(router)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
